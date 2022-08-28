@@ -19,19 +19,7 @@ public class DataStructureAssignment {
         System.out.println("Hello Github");
          System.out.println("Hello Github");
           System.out.println("Hello Github");
-           System.out.println("Hello Github");
-             System.out.println("Hello Github");
-         System.out.println("Hello Github");
-          System.out.println("Hello Github");
-           System.out.println("Hello Github");
-             System.out.println("Hello Github");
-         System.out.println("Hello Github");
-          System.out.println("Hello Github");
-           System.out.println("Hello Github");
-             System.out.println("Hello Github");
-         System.out.println("Hello Github");
-          System.out.println("Hello Github");
-           System.out.println("Hello Github");
+   
     }
     
 }
