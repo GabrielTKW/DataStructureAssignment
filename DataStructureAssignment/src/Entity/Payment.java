@@ -1,6 +1,7 @@
 package Entity;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 public class Payment {
@@ -12,7 +13,7 @@ public class Payment {
         
     }
     
-    public Payment(String paymentID,String paymentMethod,LocalDateTime paymentTime ){
+    public Payment(String paymentID,String paymentMethod,LocalDateTime paymentTime){
         this.paymentID = paymentID;
         this.paymentMethod = paymentMethod;
         this.paymentTime = paymentTime;
@@ -43,6 +44,10 @@ public class Payment {
         this.paymentTime = paymentTime;
     }
     
+    public String getDate(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        return paymentTime.format(formatter); 
+    }
     
     
 }
