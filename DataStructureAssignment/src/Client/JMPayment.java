@@ -38,7 +38,7 @@ public class JMPayment {
     }
     
     public static void displayPaymentRecords(ArrayStack<Payment> paymentArrStack){
-        for(int i=0; i<=paymentArrStack.getLength(); i++){
+        for(int i=0; i<=paymentArrStack.getTopIndex(); i++){
             System.out.println(paymentArrStack.peek(i).getPaymentMethod()); 
         }
     }
@@ -73,7 +73,7 @@ public class JMPayment {
         System.out.println("| Item Name\t  Unit Price\t\t  Quantity\t\t    Item Subtotal\t|");
         System.out.println("-----------------------------------------------------------------------------------------");
         
-        for(int i=0; i<=medArrStack.getLength(); i++){
+        for(int i=0; i<=medArrStack.getTopIndex(); i++){
             System.out.printf("| %-15s %-23s %-25s %-20.2f|\n", medArrStack.peek(i).getmID(), medArrStack.peek(i).getmName(), medArrStack.peek(i).getmDesc(), medArrStack.peek(i).getmPrice());
             totalPrice += medArrStack.peek(i).getmPrice();
         }

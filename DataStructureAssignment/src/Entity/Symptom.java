@@ -10,10 +10,10 @@ public class Symptom {
         
     }
     
-    public Symptom(String sID, String sName, String address) {
+    public Symptom(String sID, String sName, String sDesc) {
         this.sID = sID;
         this.sName = sName;
-        this.sDesc = address;
+        this.sDesc = sDesc;
     }
     
     public String getSID() {

@@ -15,8 +15,11 @@ public class CartItem {
     private Combination combination;
     private Patient patient;
     private Payment payment;
+    private static int count=0; 
     
-    public CartItem(){}
+    public CartItem(){
+        
+    }
     
     public CartItem(String cartItemID,int qty,Combination combination,Patient patient,Payment payment){
         this.cartItemID = cartItemID;
@@ -24,7 +27,27 @@ public class CartItem {
         this.patient = patient;
         this.qty = qty;
         this.payment=payment;
-                
+    }
+    
+    //Confirm will use this 
+    public CartItem(int qty,Combination combination,Patient patient,Payment payment){
+        this.combination = combination;
+        this.patient = patient;
+        this.qty = qty;
+        this.payment=payment;
+        
+        
+        //generate CartItemID
+        this.cartItemID = String.format("C%04d",count+1);
+        
+        //add overall count
+        count++;
+        
+        
+    }
+    
+    public CartItem(String cartItemID){
+        this.cartItemID = cartItemID;
     }
 
     public String getCartItemID() {

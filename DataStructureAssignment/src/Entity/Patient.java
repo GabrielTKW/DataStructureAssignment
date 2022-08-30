@@ -16,6 +16,24 @@ public class Patient {
     private String password;
     private int age;
 
+    public Patient(){}
+    
+    public Patient(String userID,String username,String icNo,
+            String password,int age , double weight , String address,boolean isAdmin){
+        this.userID = userID;
+        this.username = username;
+        this.icNo = icNo;
+        this.password = password;
+        this.age = age;
+        this.weight = weight; 
+        this.address = address;
+        this.isAdmin = isAdmin;
+    }
+    
+    public Patient(String userID){
+        this.userID = userID;
+    }
+    
     public String getUserID() {
         return userID;
     }
@@ -59,19 +77,6 @@ public class Patient {
     private String address;
     private boolean isAdmin;
     
-    public Patient(){}
-    
-    public Patient(String userID,String username,String icNo,
-            String password,int age , double weight , String address,boolean isAdmin){
-        this.userID = userID;
-        this.username = username;
-        this.icNo = icNo;
-        this.password = password;
-        this.age = age;
-        this.weight = weight; 
-        this.address = address;
-        this.isAdmin = isAdmin;
-    }
 
     public int getAge() {
         return age;
