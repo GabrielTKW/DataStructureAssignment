@@ -12,12 +12,14 @@ package Entity;
 public class Medicine {
     private String mID;
     private String mName;
+    private double mPrice;
     private String mDesc;
     
     
-    public Medicine(String mID , String mName , String mDesc){
+    public Medicine(String mID, String mName, double mPrice, String mDesc){
         this.mID = mID;
         this.mName = mName;
+        this.mPrice = mPrice;
         this.mDesc = mDesc;
     }
     
@@ -32,6 +34,10 @@ public class Medicine {
         return this.mName;
     }
     
+    public double getmPrice() {
+        return this.mPrice;
+    }
+    
     public String getmDesc(){
         return this.mDesc;
     }
@@ -44,6 +50,10 @@ public class Medicine {
 
     public void setmName(String mName) {
         this.mName = mName;
+    }
+    
+    public void setmPrice(double mPrice) {
+        this.mPrice = mPrice;
     }
 
     public void setmDesc(String mDesc) {
