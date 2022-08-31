@@ -8,13 +8,15 @@ public class Payment {
     private String paymentID;
     private String paymentMethod;
     private LocalDateTime paymentTime;
+    private static int payCount = 1;
 
     public Payment(){
         
     }
     
     public Payment(String paymentID,String paymentMethod,LocalDateTime paymentTime){
-        this.paymentID = paymentID;
+        this.paymentID = String.format("PM%06d", payCount);
+        payCount++;
         this.paymentMethod = paymentMethod;
         this.paymentTime = paymentTime;
     }
@@ -39,9 +41,18 @@ public class Payment {
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
+    
+    public LocalDateTime setLocalDateTime(){
+        LocalDateTime ldt = LocalDateTime.now();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");  
+        String formatDateTime = ldt.format(format);   
+        LocalDateTime ldt2 = LocalDateTime.parse(formatDateTime, format);
+        
+        return ldt2;
+    }
 
     public void setPaymentTime(LocalDateTime paymentTime) {
-        this.paymentTime = paymentTime;
+        this.paymentTime = setLocalDateTime();
     }
     
     public String getDate(){
