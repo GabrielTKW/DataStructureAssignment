@@ -12,17 +12,17 @@ package Entity;
 public class Delivery {
     private String dID;
     private String dStatus;
-    private String dComment;
     private Payment payment;
+    private static int deliveryCount = 1;
     
     public Delivery(){
         
     }
     
-    public Delivery(String dID,String dStatus,String dComment,Payment payment){
-        this.dID = dID;
-        this.dStatus=dStatus;
-        this.dComment=dComment;
+    public Delivery(String dID,String dStatus,Payment payment){
+        this.dID = String.format("DEL%06d", deliveryCount);
+        deliveryCount++;
+        this.dStatus = dStatus;
         this.payment = payment;
     }
 
@@ -42,14 +42,6 @@ public class Delivery {
         this.dStatus = dStatus;
     }
 
-    public String getdComment() {
-        return dComment;
-    }
-
-    public void setdComment(String dComment) {
-        this.dComment = dComment;
-    }
-
     public Payment getPayment() {
         return payment;
     }
@@ -57,8 +49,4 @@ public class Delivery {
     public void setPayment(Payment payment) {
         this.payment = payment;
     }
-    
-    
-    
-    
 }

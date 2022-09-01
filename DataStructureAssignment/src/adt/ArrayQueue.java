@@ -37,6 +37,14 @@ public class ArrayQueue<T> implements QueueInterface<T> {
     return front;
   }
 
+  public T getFront(int placementIndex) {
+    T front = null;
+    if (!isEmpty()) {
+      front = array[frontIndex - placementIndex];
+    }
+    return front;
+  }
+  
   public T dequeue() {
     T front = null;
     if (!isEmpty()) {
@@ -69,6 +77,12 @@ public class ArrayQueue<T> implements QueueInterface<T> {
   public Iterator<T> getIterator() {
     return new ArrayQueueIterator();
   }
+  
+  public int getBackIndex(){
+      backIndex++;
+      return backIndex;
+  }
+
   
   private class ArrayQueueIterator implements Iterator<T> {
     private int nextIndex;

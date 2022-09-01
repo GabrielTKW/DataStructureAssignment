@@ -109,7 +109,7 @@ public class LinkedList<T> implements ListInterface<T> {
   public T getEntry(int givenPosition) {
     T result = null;
 
-    if ((givenPosition >= 1) && (givenPosition <= numberOfEntries)) {
+    if ((givenPosition >= 0) && (givenPosition <= numberOfEntries)) {
       Node currentNode = firstNode;
       for (int i = 0; i < givenPosition - 1; ++i) {
         currentNode = currentNode.next;		// advance currentNode to next node
