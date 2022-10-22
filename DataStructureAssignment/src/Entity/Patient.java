@@ -15,6 +15,9 @@ public class Patient {
     private String icNo;
     private String password;
     private int age;
+    private double weight;
+    private String address;
+    private boolean isAdmin;
 
     public Patient(){}
     
@@ -73,9 +76,7 @@ public class Patient {
     public void setIsAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
     }
-    private double weight;
-    private String address;
-    private boolean isAdmin;
+    
     
 
     public int getAge() {

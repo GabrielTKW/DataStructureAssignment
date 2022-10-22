@@ -21,6 +21,15 @@ public class Payment {
         this.paymentTime = paymentTime;
     }
     
+    public Payment(String paymentID){
+        this.paymentID = paymentID;
+    }
+    
+    public Payment(String paymentID , String paymentMethod){
+        this.paymentID = paymentID ; 
+        this.paymentMethod = paymentMethod;
+    }
+    
     
     public String getPaymentID() {
         return paymentID;

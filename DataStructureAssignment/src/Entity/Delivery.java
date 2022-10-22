@@ -19,7 +19,7 @@ public class Delivery {
         
     }
     
-    public Delivery(String dID,String dStatus,Payment payment){
+    public Delivery(String dStatus,Payment payment){
         this.dID = String.format("DEL%06d", deliveryCount);
         deliveryCount++;
         this.dStatus = dStatus;

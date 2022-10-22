@@ -10,6 +10,7 @@ import Entity.Medicine;
 import Entity.Patient;
 import Entity.Payment;
 import Entity.Symptom;
+import adt.ArrayList;
 import adt.ArrayStack;
 import java.util.Scanner;
 
@@ -17,53 +18,11 @@ import java.util.Scanner;
  *
  * @author Gab
  */
-public class gabrielAssignment {
+public class cartItemClient {
     
     
     public static void main(String[] args) {
         
-        //declare a normal profile
-        Patient patient1 = new Patient("P00001");
-        Patient patient2 = new Patient("P00002");
-        Medicine medicine = new Medicine("M00001" , "Carrot" ,30, "Eat every 3 days");
-        Symptom symptom = new Symptom("S0001","Cough","Cough multiple times a day");
-        Combination combination = new Combination("C0001",symptom,medicine);
-        
-        
-        CartItem cartItem = new CartItem(1,combination , patient1 ,new Payment() );
-        CartItem cartItem2 = new CartItem(4,combination , patient1 ,new Payment() );
-        CartItem cartItem3 = new CartItem(3,combination , patient1 ,new Payment() );
-        CartItem cartItem4 = new CartItem(5,combination , patient1 ,new Payment() );
-        
-        //create ArrayStack 
-        ArrayStack<CartItem> cartArrS = new ArrayStack<CartItem>();
-        cartArrS.push(cartItem);
-        cartArrS.push(cartItem2);
-        cartArrS.push(cartItem3);
-        cartArrS.push(cartItem4);
-        
-        displayAllPatient(cartArrS,patient1);
-        
-        /*
-        //cartArrS = cartArrS.removeElementAt(2);
-        //cartArrS = deleteCartItem(cartArrS,new CartItem("C0003"));
-        cartArrS.deleteIndex(cartArrS , cartArrS.getTopIndex(),0,2);
-        displayAllPatient(cartArrS,patient1);
-        
-        editCartQty(cartArrS , new CartItem("C0003",9,combination , patient1 ,new Payment()));
-        
-        displayAllPatient(cartArrS,patient1);
-        
-        
-        int choice = Menu();
-        System.out.println("Choice = "+choice);
-        
-        //if choice == 5 then its back 
-        */
-        
-        cartArrS = deleteMenu(cartArrS,patient1);
-        
-        displayAllPatient(cartArrS, patient1);
         
         
     }
@@ -72,6 +31,7 @@ public class gabrielAssignment {
         
         //if already existed then edit the count if not then push 
         boolean existed = false;
+        
         for(int i = 0 ; i < cartArrS.getTopIndex()+1;i++){
             CartItem localCartItem = cartArrS.peek(i);
             
@@ -103,7 +63,7 @@ public class gabrielAssignment {
             //print all value 
             CartItem localCartItem = cartArrS.peek(i);
             
-            if(patient.getUserID().equals(localCartItem.getPatient().getUserID())){
+            if(patient.getUserID().equals(localCartItem.getPatient().getUserID()) && localCartItem.getPayment().getPaymentID()==null){
                 //count subtotal 
                 double subtotal = (localCartItem.getCombination().getMedicine().getmPrice()*localCartItem.getQty());
                 
@@ -132,7 +92,30 @@ public class gabrielAssignment {
         return -1;
     }
     
+    public static int displayAllPayment(ArrayStack<CartItem> cartArrS,Payment payment){
+        int count =0;
+        for(int i = 0 ; i < cartArrS.getTopIndex()+1;i++){
+            //print all value 
+            CartItem localCartItem = cartArrS.peek(i);
+            
+            //check whether the paymentID is null or not (If null means not payment yet)
+            if(localCartItem.getPayment().getPaymentID()!=null){
+                    
+                if(localCartItem.getPayment().getPaymentID().equals(payment.getPaymentID())){
+                  
+                    System.out.printf("|%-16s|%-3d|RM%-8.2f\n", localCartItem.getCombination().getMedicine().getmName(),localCartItem.getQty(),localCartItem.getCombination().getMedicine().getmPrice()*localCartItem.getQty());
+
+                    count++;
+
+                }
+            }
+        }
+        
+        return count;
+    }
+    
     public static ArrayStack<CartItem> deleteCartItem(ArrayStack<CartItem> cartArrS, CartItem cartItem ){
+        
         for(int i = 0 ; i < cartArrS.getTopIndex()+1;i++){
             CartItem localCartItem = cartArrS.peek(i);
             
@@ -363,4 +346,46 @@ public class gabrielAssignment {
         return cartArrS;
     }
     
+    
+    public static ArrayList<Payment> filterPaymentIDbyPatient(ArrayStack<CartItem> cartArrS , Patient patient){
+        //Get all cartItemID
+            //Filter under the patient 
+                //add PaymentID into string 
+                
+        ArrayList<Payment> paymentArr = new ArrayList<Payment>();       
+                
+        int count =0;
+        
+        for(int i = 0 ; i < cartArrS.getTopIndex()+1;i++){
+             
+            CartItem localCartItem = cartArrS.peek(i);
+            
+            if(patient.getUserID().equals(localCartItem.getPatient().getUserID())){
+               
+                if(localCartItem.getPayment().getPaymentID()!=null){
+                    //if not null means they have already pay
+
+                    paymentArr.add(localCartItem.getPayment());
+
+                    count++;
+                }
+                
+                
+            }
+        }
+        
+        
+        
+        if(count>0){
+             return paymentArr;
+        }else if (count==0){
+            return null;
+        }
+        
+        return null;
+    }
+    
+    
+    
+
 }

@@ -1,155 +1,171 @@
 package adt;
 
-import java.io.Serializable;
+public class ArrayList<T> implements ArrayListInterface<T> {
+    
+    private T[] arryList;
+    private int countLength;
+    private static final int ARRYLIST_SIZE = 15;
 
-public class ArrayList<T> implements ListInterface<T>, Serializable {
+    public ArrayList() {
+        this(ARRYLIST_SIZE);
+    }
 
-  private T[] array;
-  private int numberOfEntries;
-  private static final int DEFAULT_CAPACITY = 5;
-
-  public ArrayList() {
-    this(DEFAULT_CAPACITY);
+    public ArrayList(int initialCapacity) {
+    countLength = 0;
+    arryList = (T[]) new Object[initialCapacity];
   }
-
-  public ArrayList(int initialCapacity) {
-    numberOfEntries = 0;
-    array = (T[]) new Object[initialCapacity];
-  }
-
-  @Override
-  public boolean add(T newEntry) {
-    array[numberOfEntries] = newEntry;
-    numberOfEntries++;
-    return true;
-  }
-
-  @Override
-  public boolean add(int newPosition, T newEntry) {
+    
+    //Add into list
+    public void add(T data)
+    {
+        
+        arryList[countLength] = data;
+        countLength++;
+        
+    }
+    
+    public boolean add(int enterPosition, T data)
+    {
+        if((enterPosition>=1)&&(enterPosition <= countLength +1))
+        {
+            if(!cArrayFull())
+            {
+                moveElement(enterPosition);
+                arryList[enterPosition-1] = data;
+                countLength++;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public boolean replace(int givenPosition, T newEntry) {
     boolean isSuccessful = true;
 
-    if ((newPosition >= 1) && (newPosition <= numberOfEntries + 1)) {
-        makeRoom(newPosition);
-        array[newPosition - 1] = newEntry;
-        numberOfEntries++;
+    if ((givenPosition >= 1) && (givenPosition <= countLength)) {
+      arryList[givenPosition - 1] = newEntry;
     } else {
       isSuccessful = false;
     }
-
     return isSuccessful;
   }
-
-  @Override
-  public T remove(int givenPosition) {
-    T result = null;
-
-    if ((givenPosition >= 1) && (givenPosition <= numberOfEntries)) {
-      result = array[givenPosition - 1];
-
-      if (givenPosition < numberOfEntries) {
-        removeGap(givenPosition);
-      }
-
-      numberOfEntries--;
+    //remove
+    public T remove(int enterPosition)    
+    {
+        T result = null;
+        
+        if((enterPosition >= 1) && (enterPosition <= countLength))
+        {
+            result = arryList[enterPosition-1];
+            
+            if (enterPosition<countLength)
+            {
+                removeElement(enterPosition);
+            }
+            
+            countLength--;
+        }
+        return result;
     }
+    
+ 
 
-    return result;
-  }
-
-  @Override
-  public void clear() {
-    numberOfEntries = 0;
-  }
-
-  @Override
-  public boolean replace(int givenPosition, T newEntry) {
-    boolean isSuccessful = true;
-
-    if ((givenPosition >= 1) && (givenPosition <= numberOfEntries)) {
-      array[givenPosition - 1] = newEntry;
-    } else {
-      isSuccessful = false;
+    
+    
+    //count the array Length
+    public int getLength()
+    {
+        return countLength;
     }
-
-    return isSuccessful;
-  }
-
-  @Override
-  public T getEntry(int givenPosition) {
-    T result = null;
-
-    if ((givenPosition >= 1) && (givenPosition <= numberOfEntries)) {
-      result = array[givenPosition - 1];
+    //clear all array 
+    public void clear()
+    {
+        countLength = 0;
     }
-
-    return result;
-  }
-
-  @Override
-  public boolean contains(T anEntry) {
-    boolean found = false;
-    for (int index = 0; !found && (index < numberOfEntries); index++) {
-      if (anEntry.equals(array[index])) {
-        found = true;
-      }
+    
+    
+    //check array is empty or not 
+    public boolean isEmpty()
+    {
+        return countLength == 0;
     }
-    return found;
-  }
-
-  @Override
-  public int getNumberOfEntries() {
-    return numberOfEntries;
-  }
-
-  @Override
-  public boolean isEmpty() {
-    return numberOfEntries == 0;
-  }
-
-  @Override
-  public boolean isFull() {
-    return numberOfEntries == array.length;
-  }
-
-  @Override
-  public String toString() {
+    
+    public boolean isFull() {
+    return false;
+    }
+     
+    //check array is full or not
+    public boolean cArrayFull()
+    {
+        return countLength == arryList.length;
+    }
+    
+    //move all element to back
+    public void moveElement(int enterPosition){
+        int newIndex = enterPosition - 1;
+        int lastIndex = countLength - 1;
+        
+        //
+        for(int i = lastIndex; i >= newIndex; i--)
+        {
+            //copy from b to a 
+            //example a position is 5 b position is 4
+            //copy from 4 to 5
+            //    a               b
+            arryList[i + 1] = arryList[i];
+        }
+    }
+    
+    //remove the empty element
+    public void removeElement(int enterPosition)
+    {
+        int removeIndex = enterPosition - 1;
+        int lastIndex = countLength - 1;
+        
+        for(int i = removeIndex; i < lastIndex; i++)
+        {
+            //copy from b to a 
+            //example a position is 4 b position is 3
+            //copy from 3 to 4
+            //    a               b
+            arryList[i] = arryList[i + 1];
+        }
+    }
+    
+    public String toString() {
     String outputStr = "";
-    for (int index = 0; index < numberOfEntries; ++index) {
-      outputStr += array[index] + "\n";
+    for (int index = 0; index < countLength; ++index) {
+      outputStr += arryList[index] + "\n";
     }
 
     return outputStr;
   }
 
-  /**
-   * Task: Makes room for a new entry at newPosition. Precondition: 1 <=
-   * newPosition <= numberOfEntries + 1; numberOfEntries is array's
- numberOfEntries before addition.
-   */
-  private void makeRoom(int newPosition) {
-    int newIndex = newPosition - 1;
-    int lastIndex = numberOfEntries - 1;
-
-    // move each entry to next higher index, starting at end of
-    // array and continuing until the entry at newIndex is moved
-    for (int index = lastIndex; index >= newIndex; index--) {
-      array[index + 1] = array[index];
+    public T getEntry()
+    {
+        T result = null;
+        
+        for(int i = 0; i < countLength; i++)
+        {
+        result = arryList[i];
+        }
+        return result;
     }
-  }
+    public T getEntry(int givenPosition) {
+    T result = null;
 
-  /**
-   * Task: Shifts entries that are beyond the entry to be removed to the next
-   * lower position. Precondition: array is not empty; 1 <= givenPosition <
- numberOfEntries; numberOfEntries is array's numberOfEntries before removal.
-   */
-  private void removeGap(int givenPosition) {
-    // move each entry to next lower position starting at entry after the
-    // one removed and continuing until end of array
-    int removedIndex = givenPosition - 1;
-    int lastIndex = numberOfEntries - 1;
-
-    for (int index = removedIndex; index < lastIndex; index++) {
-      array[index] = array[index + 1];
+    if ((givenPosition >= 1) && (givenPosition <= countLength)) {
+      result = arryList[givenPosition - 1];
     }
-  }
+
+    return result;
+   }
+    
+
+    
+
+
 }

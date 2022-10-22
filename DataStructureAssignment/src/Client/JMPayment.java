@@ -7,11 +7,8 @@ import Entity.Medicine;
 import Entity.Patient;
 import Entity.Payment;
 import Entity.Symptom;
-import adt.ArrayList;
-import adt.ArrayQueue;
 import adt.ArrayStack;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import adt.DynamicQueue;
 import java.util.Scanner;
 
 /**
@@ -22,99 +19,71 @@ public class JMPayment {
 
     public static void main(String[] args) {
 
-        //declare a normal profile (GABRIEL)
+//      //declare a normal profile (FROM GABRIEL SIDE)
         Patient patient1 = new Patient("P00001");
         Patient patient2 = new Patient("P00002");
         Medicine medicine = new Medicine("M00001", "Carrot", 30, "Eat every 3 days");
         Symptom symptom = new Symptom("S0001", "Cough", "Cough multiple times a day");
+        Medicine medicine2 = new Medicine("M00002", "Caadwa", 50, "Eat eawday 3 days");
         Combination combination = new Combination("C0001", symptom, medicine);
+        Combination combination2 = new Combination("C0002", symptom, medicine2);
+
+        //---------------------------------------------------------------------------------
+        //Declare object class(JM)
+        Payment p = new Payment();
+
+        //Declare Array Stack (JM)
+        ArrayStack<Payment> paymentArrStack = new ArrayStack<Payment>();
+
+        // (FROM GABRIEL SIDE)
+        Payment p1 = new Payment("PM000001", "TnG", p.setLocalDateTime());
+        Payment p2 = new Payment("PM000002", "Credit/Debit Card", p.setLocalDateTime());
+        Payment p3 = new Payment("PM000003", "Online Banking", p.setLocalDateTime());
+
+        paymentArrStack.push(p1);
+        paymentArrStack.push(p2);
+        paymentArrStack.push(p3);
 
         CartItem cartItem = new CartItem(1, combination, patient2, new Payment());
-        CartItem cartItem2 = new CartItem(4, combination, patient2, new Payment());
-        CartItem cartItem3 = new CartItem(6, combination, patient1, new Payment());
+        CartItem cartItem2 = new CartItem(4, combination2, patient2, new Payment());
+        CartItem cartItem3 = new CartItem(6, combination, patient1, p3);
 
-        //create ArrayStack 
+        //create ArrayStack (FROM GABRIEL SIDE)
         ArrayStack<CartItem> cartArrS = new ArrayStack<CartItem>();
         cartArrS.push(cartItem);
         cartArrS.push(cartItem2);
         cartArrS.push(cartItem3);
 
-        //---------------------------------------------------------------------------------
-        //Declare object class
+        //Declare methods (JM)
+        //makePayment(cartArrS, paymentArrStack, p, patient1);
+        //paymentMenu(paymentArrStack, patient2, cartArrS);
+    }
+
+    //After cart, will proceed to this method which lets user to make payment and add the record to the stack
+    public static void makePayment(ArrayStack<CartItem> cartArrS, ArrayStack<Payment> paymentArrStack, Patient patient, DynamicQueue<Delivery> deliveryQ) {
         Payment p = new Payment();
-        Delivery del = new Delivery();
-
-        //Declare Array Stack
-        ArrayStack<Medicine> medArrStack = new ArrayStack<Medicine>();
-        ArrayStack<Payment> paymentArrStack = new ArrayStack<Payment>();
-
-        //Declare Array Queue
-        ArrayQueue<Delivery> delLQueue = new ArrayQueue<Delivery>();
-
-        //Declare methods
-        paymentInitialize(paymentArrStack, p, delLQueue);
-//        makePayment(medArrStack, paymentArrStack, p, delLQueue);
-        paymentMenu(medArrStack, paymentArrStack, p, delLQueue, patient1, cartArrS);
-
-    }
-
-    public static void paymentInitialize(ArrayStack<Payment> paymentArrStack, Payment p, ArrayQueue<Delivery> delLQueue) {
-        Payment p1 = new Payment("PM000001", "TnG", p.setLocalDateTime());
-        Payment p2 = new Payment("PM000002", "Credit/Debit Card", p.setLocalDateTime());
-        Payment p3 = new Payment("PM000003", "Online Banking", p.setLocalDateTime());
-        
-        paymentArrStack.push(p1);
-        paymentArrStack.push(p2);
-        paymentArrStack.push(p3);
-
-        delLQueue.enqueue(new Delivery("DEL", "Delivring", p1));
-        delLQueue.enqueue(new Delivery("DEL", "Deliveng", p2));
-        delLQueue.enqueue(new Delivery("DEL", "Deliing", p3));
-        
-    }
-
-    public static void displayPaymentRecords(ArrayStack<Payment> paymentArrStack) {
-        for (int i = -1; i <= paymentArrStack.getTopIndex(); i++) {
-            System.out.println(paymentArrStack.peek(i).getPaymentMethod());
-        }
-    }
-
-    //add customer new payments into ArrayStack using push();
-    public static void makePayment(ArrayStack<Medicine> medArrStack, ArrayStack<Payment> paymentArrStack, Payment p, ArrayQueue<Delivery> delLQueue) {
-
-        medArrStack.push(new Medicine("M001", "Panadol", 100.00, "Pain Killer"));
-        medArrStack.push(new Medicine("M002", "Pan", 200.00, "A"));
-        medArrStack.push(new Medicine("M003", "nadol", 80.00, "B"));
-        medArrStack.push(new Medicine("M004", "Pol", 50.00, "AAA"));
-        medArrStack.push(new Medicine("M005", "Po", 90.00, "BBB"));
-
         Scanner sc = new Scanner(System.in);
-        Scanner sc2 = new Scanner(System.in);
 
-        String itemName = "Product 1";
-        double price = 123.00;
-        double deliveryFee = 5.00;
         boolean amountCorrect = false;
         double totalPrice = 0;
+
+        int index = 0;
 
         int paymentMethod;
         String paymentMethodChosen = null;
         double paymentAmount;
-        char confirmPayment;
-        int afterPaymentChoice;
 
         System.out.println("-----------------------------------------------------------------------------------------");
         System.out.println("| Item Name\t  Unit Price\t\t  Quantity\t\t    Item Subtotal\t|");
         System.out.println("-----------------------------------------------------------------------------------------");
 
-        for (int i = 0; i <= medArrStack.getTopIndex(); i++) {
-            System.out.printf("| %-15s %-23s %-25s %-20.2f|\n", medArrStack.peek(i).getmID(), medArrStack.peek(i).getmName(), medArrStack.peek(i).getmDesc(), medArrStack.peek(i).getmPrice());
-            totalPrice += medArrStack.peek(i).getmPrice();
+        for (int i = 0; i <= cartArrS.getTopIndex(); i++) {
+            if (patient.getUserID().equals(cartArrS.peek(i).getPatient().getUserID()) && cartArrS.peek(i).getPayment().getPaymentID() == null) {
+                totalPrice += (cartArrS.peek(i).getCombination().getMedicine().getmPrice()) * cartArrS.peek(i).getQty();
+                System.out.printf("| %-15s %-23s %-25s %-20.2f|\n", cartArrS.peek(i).getCombination().getMedicine().getmName(), cartArrS.peek(i).getCombination().getMedicine().getmPrice(), cartArrS.peek(i).getQty(), (cartArrS.peek(i).getCombination().getMedicine().getmPrice()) * cartArrS.peek(i).getQty());
+            }
+            index = i;
         }
-//        for (int i = 0; i <= paymentArrStack.getTopIndex(); i++) {
-//            System.out.printf("| %-15s %-23s %-25s %-20.2f|\n", paymentArrStack.peek(i).getPaymentID(), paymentArrStack.peek(i).getPaymentMethod(), paymentArrStack.peek(i).getDate(), price);
-//            totalPrice += price;
-//        }
 
         System.out.println("-----------------------------------------------------------------------------------------");
         System.out.printf("|\t\t\t\t\t\t\t    Total : %-20.2f|", totalPrice);
@@ -175,31 +144,36 @@ public class JMPayment {
         }
 
         if (amountCorrect) {
+            cartItemClient cic = new cartItemClient();
             System.out.println("Payment Success!\n");
             p = new Payment("P", paymentMethodChosen, p.setLocalDateTime());
+            //Display receipt after payment
+            paymentReceipt(cartArrS, paymentMethodChosen, totalPrice, patient);
+
+            for (int i = 0; i <= cartArrS.getTopIndex(); i++) {
+                if (patient.getUserID().equals(cartArrS.peek(i).getPatient().getUserID()) && cartArrS.peek(i).getPayment().getPaymentID() == null) {
+                    CartItem localCartItem = cartArrS.peek(i);
+                    localCartItem.setPayment(p);
+                    cic.editCartQty(cartArrS, localCartItem);
+                }
+            }
+
             paymentArrStack.push(p);
 
-            //Display receipt after payment
-            paymentReceipt(medArrStack, paymentMethodChosen, totalPrice);
-            delLQueue.enqueue(new Delivery("DEL", "Delivering", p));
-            System.out.println("\n1. View delivery details");
-            System.out.println("2. Back to homepage");
-            System.out.print("Your choice : ");
-            afterPaymentChoice = sc.nextInt();
+            //add delivery
+            Delivery newDelivery = new Delivery("Order Received", p);
 
-            if (afterPaymentChoice == 1) {
-                displayDelivery(delLQueue, paymentArrStack, p);
-            } else if (afterPaymentChoice == 2) {
-                System.out.println("Homepage");
-            } else {
-                System.out.println("Invalid input. Please enter between 1 to 2 only.");
-            }
+            //add to deliveryStack
+            deliveryQ.enqueue(newDelivery);
+
+            System.out.println("Successfully Added Delivery");
 
         }
     }
 
-    public static void paymentReceipt(ArrayStack<Medicine> medArrStack, String paymentMethodChosen, double totalPrice) {
-        int qty = 5;
+    //display payment receipt to user after payment
+    public static void paymentReceipt(ArrayStack<CartItem> cartArrS, String paymentMethodChosen, double totalPrice, Patient patient) {
+        int qty = 0;
 
         System.out.println("==========================================================================================");
         System.out.println("||\t\t\t\t\tReceipt\t\t\t\t\t\t||");
@@ -207,8 +181,11 @@ public class JMPayment {
         System.out.println("||\t\t\t\t\t\t\t\t\t\t\t||");
         System.out.println("|| Item Name\t  Unit Price\t\t  Quantity\t\t    Item Subtotal\t||");
         System.out.println("==========================================================================================");
-        for (int i = 0; i <= medArrStack.getTopIndex(); i++) {
-            System.out.printf("|| %-15s %-23s %-25s %-19.2f||\n", medArrStack.peek(i).getmID(), medArrStack.peek(i).getmName(), medArrStack.peek(i).getmDesc(), medArrStack.peek(i).getmPrice());
+        for (int i = 0; i <= cartArrS.getTopIndex(); i++) {
+            if (patient.getUserID().equals(cartArrS.peek(i).getPatient().getUserID()) && cartArrS.peek(i).getPayment().getPaymentID() == null) {
+                System.out.printf("|| %-14s %-23s %-25s %-20.2f||\n", cartArrS.peek(i).getCombination().getMedicine().getmName(), cartArrS.peek(i).getCombination().getMedicine().getmPrice(), cartArrS.peek(i).getQty(), (cartArrS.peek(i).getCombination().getMedicine().getmPrice()) * cartArrS.peek(i).getQty());
+                qty += cartArrS.peek(i).getQty();
+            }
         }
         System.out.println("==========================================================================================");
         System.out.printf("|| Total number of medicine purchased : %-48d||\n", qty);
@@ -216,66 +193,61 @@ public class JMPayment {
         System.out.printf("|| Paid using : %-72s||\n", paymentMethodChosen);
         System.out.println("||\t\t\t\t\t\t\t\t\t\t\t||");
         System.out.println("||\t\t\t\t      End Of Receipt\t\t\t\t\t||");
-        System.out.println("==========================================================================================");
+        System.out.println("==========================================================================================\n");
 
     }
 
     //Display payment history for customer (Display from newest payment record to oldest payment record) - LIFO
     public static void paymentHistory(ArrayStack<Payment> paymentArrStack, Patient patient, ArrayStack<CartItem> cartArrS) {
-        double totalPrice = 150;
         boolean found = false;
+        int count = 0;
+
         System.out.println("\t\tYour Payment History");
-        System.out.println("===================================================");
+        System.out.println("=========================================================");
         for (int i = 0; i < paymentArrStack.getTopIndex() + 1; i++) {
-            if (patient.getUserID().equals(cartArrS.peek(i).getPatient().getUserID())) {
-                if (cartArrS.peek(i).getPayment() != null) {
+            if (patient.getUserID().equals(getInfo(paymentArrStack.peek(i).getPaymentID(), cartArrS))) {
+                if (idExist(paymentArrStack.peek(i).getPaymentID(), cartArrS)) {
                     System.out.println("Payment ID : " + paymentArrStack.peek(i).getPaymentID());
-                    System.out.println("Payment Total : RM" + totalPrice);
+                    System.out.println("Payment Total : RM" + countPrice(paymentArrStack.peek(i).getPaymentID(), cartArrS));
                     System.out.println("Payment Date : " + paymentArrStack.peek(i).getDate());
+                    System.out.println("Payment Method : " + paymentArrStack.peek(i).getPaymentMethod());
+
+                    System.out.println("Purchased Medicine : ");
+                    
+                        for (int z = 0; z <= cartArrS.getTopIndex(); z++) {
+                            if (paymentArrStack.peek(i).getPaymentID().equals(cartArrS.peek(z).getPayment().getPaymentID())) {
+                                System.out.println("     " + (count + 1) + ". " + cartArrS.peek(z).getCombination().getMedicine().getmName());
+                                count++;
+                            }
+                        }
+                    
+                    count = 0;
+
                     System.out.println("---------------------------------------------------");
                     found = true;
                 }
             }
         }
-        if (!found) {
-            System.out.println("You did not make any payment before.");
+    }
+
+    //Display all payment records (Admin side)
+    public static void displayAllPayment(ArrayStack<Payment> paymentArrStack, ArrayStack<CartItem> cartArrS) {
+        System.out.println("---------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("| Payment ID\t  Payment Method\tPayment Time\t\t Paid Amount(RM)\t User ID\t  Username        |");
+        System.out.println("---------------------------------------------------------------------------------------------------------------------------");
+
+        for (int i = 0; i < paymentArrStack.getTopIndex() + 1; i++) {
+            if (idExist(paymentArrStack.peek(i).getPaymentID(), cartArrS)) {
+                Payment payment = paymentArrStack.peek(i);
+                System.out.printf("| %-15s %-21s %-24s %-23.2f %-16s %-13s   |\n", payment.getPaymentID(), paymentArrStack.peek(i).getPaymentMethod(), paymentArrStack.peek(i).getDate(), countPrice(paymentArrStack.peek(i).getPaymentID(), cartArrS), getUserID(payment.getPaymentID(), cartArrS), getUsername(payment.getPaymentID(), cartArrS));
+            }
         }
+
+        System.out.println("---------------------------------------------------------------------------------------------------------------------------\n");
     }
 
-    public static void deletePaymentRecord() {
-        
-    }
-
-    public static void displayAllPayment(ArrayStack<Payment> paymentArrStack) {
-        double price = 120;
-        double totalPrice = 0;
-        for (int i = 0; i <= paymentArrStack.getTopIndex(); i++) {
-            System.out.printf("| %-15s %-23s %-25s %-20.2f|\n", paymentArrStack.peek(i).getPaymentID(), paymentArrStack.peek(i).getPaymentMethod(), paymentArrStack.peek(i).getDate(), price);
-            totalPrice += price;
-        }
-    }
-
-    public static void displayDelivery(ArrayQueue<Delivery> delLQueue, ArrayStack<Payment> paymentArrStack, Payment p) {
-        if (delLQueue.isEmpty()) {
-            System.out.println("You do not have any delivery because you did not make any payment yet.");
-        } 
-        else {
-//            for (int i = 0; i < delLQueue.getBackIndex(); i++) {
-//                System.out.println(delLQueue.getIterator().next().getdID());
-//                System.out.println(delLQueue.getIterator().next().getdStatus());
-//                System.out.println(delLQueue.getIterator().next().getPayment().getDate());
-//                System.out.println(delLQueue.getIterator().next().getPayment().getPaymentMethod());
-//                System.out.println(delLQueue.getIterator().next().getPayment().getPaymentTime());
-//                System.out.println("");
-//            }
-
-//              System.out.println(delLQueue.getFront().getdID());
-//              System.out.println(delLQueue.getFront().getdStatus());
-//              System.out.println(delLQueue.getFront().getPayment().getPaymentMethod());
-        }
-    }
-
-    public static void paymentMenu(ArrayStack<Medicine> medArrStack, ArrayStack<Payment> paymentArrStack, Payment p, ArrayQueue<Delivery> delLQueue, Patient patient, ArrayStack<CartItem> cartArrS) {
+    //Main menu for payment (not sure if gonna use it or not)
+    public static void paymentMenu(ArrayStack<Payment> paymentArrStack, Patient patient, ArrayStack<CartItem> cartArrS, DynamicQueue<Delivery> deliveryQ) {
         Scanner sc = new Scanner(System.in);
         int choice;
 
@@ -285,27 +257,148 @@ public class JMPayment {
             System.out.println("-----------------------------------------------------------");
             System.out.println("|\t1.  Make Payment                                  |");
             System.out.println("|\t2.  Payment History                               |");
-            System.out.println("|\t3.  Display delivery details                      |");
-            System.out.println("|\t3.  Display all payment                           |");
+            System.out.println("|\t3.  Display all payment records (admin)           |");
+            System.out.println("|\t4.  Search Payment Records (admin)                |");
             System.out.println("|\t5.  Back to homepage                              |");
             System.out.println("-----------------------------------------------------------");
             System.out.print("\nEnter your choice : ");
             choice = sc.nextInt();
-            System.out.println("");
 
             if (choice == 1) {
-                makePayment(medArrStack, paymentArrStack, p, delLQueue);
+                makePayment(cartArrS, paymentArrStack, patient, deliveryQ);
             } else if (choice == 2) {
                 paymentHistory(paymentArrStack, patient, cartArrS);
             } else if (choice == 3) {
-                displayDelivery(delLQueue, paymentArrStack, p);
+                if (patient.isIsAdmin()) {
+                    displayAllPayment(paymentArrStack, cartArrS);
+                } else {
+                    System.out.println("You do not have permission to access this function.");
+                }
             } else if (choice == 4) {
-                displayAllPayment(paymentArrStack);
+                if (patient.isIsAdmin()) {
+                    searchPayment(paymentArrStack, cartArrS);
+                } else {
+                    System.out.println("You do not have permission to access this function.");
+                }
             } else if (choice == 5) {
-                System.out.println("Back to homepage");
+                System.out.println("Exit Payment");
+                break;
             } else {
-                System.out.println("Invalid input. 1 and 2 only.");
+                System.out.println("Invalid input. Please input 1 to 5 only\n");
             }
-        } while (choice != 3);
+
+        } while (choice != 5);
+    }
+
+    //For admin to search specific payment records (Admin Side)
+    public static void searchPayment(ArrayStack<Payment> paymentArrStack, ArrayStack<CartItem> cartArrS) {
+        Scanner sc = new Scanner(System.in);
+        String paymentID;
+        double paidAmount = 0;
+        char continueEdit;
+        boolean found = false;
+
+        do {
+            found = false;
+            paidAmount = 0;
+            System.out.print("Search Payment ID(TYPE XXX to quit) : ");
+            paymentID = sc.nextLine();
+            paymentID = paymentID.toUpperCase();
+
+            if (paymentID.equalsIgnoreCase("XXX")) {
+                System.out.println("------------------------------------------------------------\n");
+                break;
+            }
+
+            for (int i = 0; i <= paymentArrStack.getTopIndex(); i++) {
+                if (paymentArrStack.peek(i).getPaymentID().equals(paymentID)) {
+                    if (idExist(paymentArrStack.peek(i).getPaymentID(), cartArrS)) {
+                        found = true;
+                        System.out.println("\n1 Record Found!");
+                        System.out.println("---------------------------------------------------------------------------------------------------------------------------");
+                        System.out.println("| Payment ID\t  Payment Method\tPayment Time\t\t Paid Amount(RM)\t User ID\t  Username        |");
+                        System.out.println("---------------------------------------------------------------------------------------------------------------------------");
+                        System.out.printf("| %-15s %-21s %-24s %-23.2f %-16s %-13s   |\n", paymentArrStack.peek(i).getPaymentID(), paymentArrStack.peek(i).getPaymentMethod(), paymentArrStack.peek(i).getDate(), countPrice(paymentArrStack.peek(i).getPaymentID(), cartArrS), getUserID(paymentArrStack.peek(i).getPaymentID(), cartArrS), getUsername(paymentArrStack.peek(i).getPaymentID(), cartArrS));
+                        System.out.println("---------------------------------------------------------------------------------------------------------------------------");
+                    }
+                }
+            }
+            if (!found) {
+                System.out.println("Payment ID not found!");
+            }
+
+            System.out.print("Do you want to continue searching?(Y/N) : ");
+            continueEdit = sc.next().trim().charAt(0);
+            sc.nextLine();
+            System.out.println("");
+        } while (continueEdit == 'y' || continueEdit == 'Y');
+    }
+
+    /* ----------------- OTHER METHODS USED FOR OTHER PURPOSES --------------------- */
+    //Search whether the paymentID is null or not null in the cart array stack
+    public static boolean idExist(String paymentID, ArrayStack<CartItem> cartArrS) {
+        boolean idExisted = false;
+
+        for (int i = 0; i <= cartArrS.getTopIndex(); i++) {
+            if (paymentID.equals(cartArrS.peek(i).getPayment().getPaymentID())) {
+                if (cartArrS.peek(i).getPayment().getPaymentID() != null) {
+                    idExisted = true;
+                }
+            }
+        }
+        return idExisted;
+    }
+
+    //Get user ID of a specific cart
+    public static String getUserID(String paymentID, ArrayStack<CartItem> cartArrS) {
+        String userID = null;
+        String username = null;
+
+        for (int i = 0; i <= cartArrS.getTopIndex(); i++) {
+            if (paymentID.equals(cartArrS.peek(i).getPayment().getPaymentID())) {
+                if (cartArrS.peek(i).getPayment().getPaymentID() != null) {
+                    userID = cartArrS.peek(i).getPatient().getUserID();
+                }
+            }
+        }
+        return userID;
+    }
+
+    //Get user username of a specific cart
+    public static String getUsername(String paymentID, ArrayStack<CartItem> cartArrS) {
+        String userID = null;
+        String username = null;
+
+        for (int i = 0; i <= cartArrS.getTopIndex(); i++) {
+            if (paymentID.equals(cartArrS.peek(i).getPayment().getPaymentID())) {
+                if (cartArrS.peek(i).getPayment().getPaymentID() != null) {
+                    username = cartArrS.peek(i).getPatient().getUsername();
+                }
+            }
+        }
+        return username;
+    }
+
+    //Calculate the total price of a specific cart
+    public static double countPrice(String paymentID, ArrayStack<CartItem> cartArrS) {
+        float totalPrice = 0;
+        for (int i = 0; i <= cartArrS.getTopIndex(); i++) {
+            if (paymentID.equals(cartArrS.peek(i).getPayment().getPaymentID())) {
+                totalPrice += (cartArrS.peek(i).getCombination().getMedicine().getmPrice()) * cartArrS.peek(i).getQty();
+            }
+        }
+        return totalPrice;
+    }
+
+    //Get userID for paymentHistory
+    public static String getInfo(String paymentID, ArrayStack<CartItem> cartArrS) {
+        String userID = null;
+
+        for (int i = 0; i <= cartArrS.getTopIndex(); i++) {
+            if (paymentID.equals(cartArrS.peek(i).getPayment().getPaymentID())) {
+                userID = cartArrS.peek(i).getPatient().getUserID();
+            }
+        }
+        return userID;
     }
 }
